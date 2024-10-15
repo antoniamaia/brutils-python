@@ -25,7 +25,7 @@ the development of applications for the Brazilian business.
 
 # Installation
 
-```
+```bash
 pip install brutils
 ```
 
@@ -87,6 +87,8 @@ False
   - [is_valid_voter_id](#is_valid_voter_id)
   - [format_voter_id](#format_voter_id)
   - [generate_voter_id](#generate_voter_id)
+- [IBGE](#ibge)
+  - [convert_code_to_uf](#convert_code_to_uf)
 
 ## CPF
 
@@ -673,16 +675,16 @@ Example:
 
 ```python
 >>> from brutils import format_license_plate
->>> format_license_plate("ABC1234") 
+>>> format_license_plate("ABC1234")
 "ABC-1234"
 # old format (contains a dash)
->>> format_license_plate("abc1234") 
+>>> format_license_plate("abc1234")
 "ABC-1234"
 # old format (contains a dash)
->>> format_license_plate("ABC1D23") 
+>>> format_license_plate("ABC1D23")
 "ABC1D23"
 # mercosul format
->>> format_license_plate("abc1d23") 
+>>> format_license_plate("abc1d23")
 "ABC1D23"
 # mercosul format
 >>> format_license_plate("ABCD123")
@@ -1045,7 +1047,7 @@ True
 
 Formats a voter ID number for visual display.
 
-This function takes a voter ID string containing only numbers as input 
+This function takes a voter ID string containing only numbers as input
 and adds the standard formatting spaces for display.
 
 Arguments:
@@ -1085,6 +1087,29 @@ Example:
 '183475722801'
 >>> generate_voter_id(federative_union ="MG")
 '950125640248'
+```
+
+## IBGE
+### convert_code_to_uf
+Converts a given IBGE code (2-digit string) to its corresponding UF (state abbreviation).
+
+Args:
+  * code (str): The 2-digit IBGE code to be converted.
+
+Retorna:
+  * str or None: The UF code corresponding to the IBGE code, or None if the
+                 IBGE code is invalid.
+
+Exemplo:
+
+```python
+>>> from brutils.ibge.uf import convert_code_to_uf
+>>> convert_code_to_uf("12")
+'AC'
+>>> convert_code_to_uf("33")
+'RJ'
+>>> convert_code_to_uf("99")
+>>>
 ```
 
 # Feature Request and Bug Report

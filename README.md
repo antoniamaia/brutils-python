@@ -25,7 +25,7 @@ desenvolvimento de aplicações para o business Brasileiro.
 
 # Instalação
 
-```
+```bash
 pip install brutils
 ```
 
@@ -87,6 +87,8 @@ False
   - [is_valid_voter_id](#is_valid_voter_id)
   - [format_voter_id](#format_voter_id)
   - [generate_voter_id](#generate_voter_id)
+- [IBGE](#ibge)
+  - [convert_code_to_uf](#convert_code_to_uf)
 
 ## CPF
 
@@ -678,16 +680,16 @@ Exemplo:
 
 ```python
 >>> from brutils import format_license_plate
->>> format_license_plate("ABC1234") 
+>>> format_license_plate("ABC1234")
 "ABC-1234"
 # formato antigo (contém traço)
->>> format_license_plate("abc1234") 
+>>> format_license_plate("abc1234")
 "ABC-1234"
 # formato antigo (contém traço)
->>> format_license_plate("ABC1D23") 
+>>> format_license_plate("ABC1D23")
 "ABC1D23"
 # formato mercosul
->>> format_license_plate("abc1d23") 
+>>> format_license_plate("abc1d23")
 "ABC1D23"
 # formato mercosul
 >>> format_license_plate("ABCD123")
@@ -1041,8 +1043,8 @@ True
 
 Formata um número de Título de Eleitor para exibição visual.
 
-Esta função recebe uma string de Título de Eleitor contendo 
-apenas números como entrada e adiciona os espaços de formatação 
+Esta função recebe uma string de Título de Eleitor contendo
+apenas números como entrada e adiciona os espaços de formatação
 padrão para exibição.
 
 Argumentos:
@@ -1061,7 +1063,7 @@ Exemplo:
 >>> format_voter_id("202715292895")
 '2027 1529 28 95'
 >>> format_voter_id("739035552205")
->>> 
+>>>
 ```
 
 ### generate_voter_id
@@ -1082,6 +1084,29 @@ Exemplo:
 '183475722801'
 >>> generate_voter_id(federative_union ="MG")
 '950125640248'
+```
+
+## IBGE
+### convert_code_to_uf
+Converte um determinado código do IBGE (string de 2 dígitos) para sua UF (abreviatura estadual) correspondente.
+
+Args:
+  * code (str): O código IBGE de 2 dígitos a ser convertido.
+
+Retorna:
+  * str or None: O código UF correspondente ao código IBGE, ou None se o
+                 código IBGE for inválido.
+
+Exemplo:
+
+```python
+>>> from brutils.ibge.uf import convert_code_to_uf
+>>> convert_code_to_uf("12")
+'AC'
+>>> convert_code_to_uf("33")
+'RJ'
+>>> convert_code_to_uf("99")
+>>>
 ```
 
 
