@@ -66,6 +66,8 @@ False
   - [generate\_phone](#generate_phone)
 - [Email](#email)
   - [is\_valid\_email](#is_valid_email)
+- [Data](#date)
+  - [convert\_date\_to_text](#convert_date_to_text) 
 - [Placa de Carro](#placa-de-carro)
   - [is\_valid\_license\_plate](#is_valid_license_plate)
   - [format\_license\_plate](#format_license_plate)
@@ -79,16 +81,22 @@ False
   - [remove\_symbols\_pis](#remove_symbols_pis)
   - [generate\_pis](#generate_pis)
 - [Processo Jurídico](#processo-jurídico)
-  - [is\_valid\_legal\_process](#is_valid_legal_process)
+- [is\_valid\_legal\_process](#is_valid_legal_process)
   - [format\_legal\_process](#format_legal_process)
   - [remove\_symbols\_legal\_process](#remove_symbols_legal_process)
   - [generate\_legal\_process](#generate_legal_process)
-- [Título Eleitoral](#titulo-eleitoral)
-  - [is_valid_voter_id](#is_valid_voter_id)
-  - [format_voter_id](#format_voter_id)
-  - [generate_voter_id](#generate_voter_id)
+- [Titulo Eleitoral](#titulo-eleitoral)
+  - [is\_valid\_voter\_id](#is_valid_voter_id)
+  - [format\_voter\_id](#format_voter_id)
+  - [generate\_voter\_id](#generate_voter_id)
 - [IBGE](#ibge)
+  - [get_code_by_municipality_name](#get_code_by_municipality_name)
   - [convert_code_to_uf](#convert_code_to_uf)
+  - [get\_municipality\_by\_code](#get_municipality_by_code)
+- [Feriados](#feriados)
+  - [is_holiday](#is_holiday)
+- [Monetário](#monetário)
+  - [format\_currency](#format_currency)
 
 ## CPF
 
@@ -628,6 +636,33 @@ False
 False
 ```
 
+## Data
+
+## convert_date_to_text
+
+Converte uma data em sua representação textual.
+
+Argumentos:
+ - date (str): Uma string no formato dd/mm/aaaa
+
+Retorna:
+ - A represetação textual da data ou None caso a data esteja mal formatada ou a data seja inválida.
+
+Exemplo:
+
+````python
+>>> from brutils import convert_date_to_text
+>>> convert_date_to_text("25/12/2000")
+"Vinte e cinco de dezembro de dois mil"
+>>> convert_date_to_text("31/02/2000")
+None
+>>> convert_date_to_text("29/02/2024")
+"Vinte e nove de fevereiro de dois mil e vinte e quatro"
+>>> convert_date_to_text("1/08/2024")
+"Primeiro de agosto de dois mil e vinte e quatro"
+````
+
+
 ## Placa de Carro
 
 ### is_valid_license_plate
@@ -1087,6 +1122,7 @@ Exemplo:
 ```
 
 ## IBGE
+
 ### convert_code_to_uf
 Converte um determinado código do IBGE (string de 2 dígitos) para sua UF (abreviatura estadual) correspondente.
 
@@ -1109,6 +1145,114 @@ Exemplo:
 >>>
 ```
 
+### get_municipality_by_code
+
+Retorna o nome do município e a UF para um código do IBGE.
+
+Args:
+  * code (str): O código do IBGE para o município.
+
+Returns:
+  * tuple: Retorna uma Tupla formatado como ("Município", "UF").
+  * None: Retorna None se o código for inválido.
+
+Example:
+
+```python
+>>> from brutils import get_municipality_by_code
+>>> get_municipality_by_code(3550308)
+("São Paulo", "SP")
+```
+
+### get_code_by_municipality_name
+
+Retorna o código IBGE para um dado nome de município e código de UF.
+
+Essa função recebe uma string representando o nome de um município e o código da UF, e retorna o código IBGE correspondente (string). A função lida com os nomes ignorando diferenças de maiúsculas, acentos, tratando o caractere "ç" como "c", e ignorando diferenças de maiúsculas para o código da UF.
+
+Argumentos:
+  * municipality_name (str): O nome do município.
+  * uf (str): O código UF do estado.
+
+Retorna:
+  * str: O código IBGE do município. Retorna None se o nome não for válido ou não existir.
+
+Exemplo:
+
+```python
+>>> from brutils import get_code_by_municipality_name
+>>> get_code_by_municipality_name("São Paulo", "SP")
+"3550308"
+>>> get_code_by_municipality_name("goiania", "go")
+"5208707"
+>>> get_code_by_municipality_name("Conceição do Coité", "BA")
+"2908408"
+>>> get_code_by_municipality_name("conceicao do Coite", "Ba")
+"2908408"
+>>> get_code_by_municipality_name("Municipio Inexistente", "")
+None
+>>> get_code_by_municipality_name("Municipio Inexistente", "RS")
+None
+```
+
+## Feriados
+
+### is_holiday
+
+Verifica se uma determinada data é um feriado nacional ou estadual no Brasil.
+
+Esta função recebe um objeto `datetime` como a data e uma UF opcional (Unidade Federativa) para especificar feriados estaduais. Retorna `True` se a data for um feriado, `False` se não for, ou `None` se a data ou UF forem inválidas. Nota: a função não abrange feriados municipais.
+
+Argumentos:
+
+- `date (datetime)`: A data a ser verificada.
+- `uf (str, opcional)`: A abreviação do estado (UF) para verificar feriados estaduais. Se não fornecido, apenas feriados nacionais são considerados.
+
+Retorna:
+
+- `bool | None`: `True` se a data for um feriado, `False` se não for, ou `None` se a data ou UF forem inválidas.
+
+Exemplo:
+
+```python
+>>> from datetime import datetime
+>>> from brutils import is_holiday
+
+>>> is_holiday(datetime(2024, 1, 1))
+True
+>>> is_holiday(datetime(2024, 1, 2))
+False
+>>> is_holiday(datetime(2024, 3, 2), uf="SP")
+False
+>>> is_holiday(datetime(2024, 12, 25), uf="RJ")
+True
+```
+
+## Monetário
+
+### format_currency
+
+Formata um número seguindo o padrão monetário brasileiro. O número será formatado
+adicionando o símbolo R$ como prefixo, vírgula como separador decimal, e ponto como 
+agrupador de milhar.
+
+Argumentos:
+  * float ou Decimal: Um número com ou sem casas decimais.
+
+Retorna:
+  * str ou None: O número formatado seguindo o padrão brasileiro.
+
+Exemplo:
+
+```python
+>>> from brutils.currency import format_currency
+>>> format_currency(1259.03)
+'R$ 1.259,03'
+>>> format_currency(0)
+'R$ 0,00'
+>>> format_currency("not a number")
+None
+```
 
 # Novos Utilitários e Reportar Bugs
 
@@ -1140,3 +1284,11 @@ Vamos construir juntos! 🚀🚀
 [github-discussions]: https://github.com/brazilian-utils/brutils-python/discussions
 [github-issues-doc]: https://docs.github.com/pt/issues/tracking-your-work-with-issues/creating-an-issue
 [github-issues]: https://github.com/brazilian-utils/brutils-python/issues
+
+## ❤️ Quem já Contribuiu
+
+<a href="https://github.com/brazilian-utils/brutils-python/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=brazilian-utils/brutils-python" />
+</a></br></br>
+
+_Feito por [contrib.rocks](https://contrib.rocks)._
